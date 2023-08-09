@@ -7,7 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="CoinGeckoAsyncApi" Version="1.7.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Common\" />
     </ItemGroup>
 
 </Project>

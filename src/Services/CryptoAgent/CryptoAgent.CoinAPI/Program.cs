@@ -1,6 +1,8 @@
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<ICoinGeckoClient, CoinGeckoClient>();
+builder.Services.AddScoped<ICoinService, CoinService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
