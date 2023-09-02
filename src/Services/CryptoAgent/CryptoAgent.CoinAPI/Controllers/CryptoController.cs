@@ -9,16 +9,22 @@ public class CryptoController : ControllerBase
 {
     #region PrivateFields
 
-    private readonly ICoinService _coinService;
+    private readonly IListingsAgent _listingsAgent;
+    private readonly IQuotesAgent _quotesAgent;
+    private readonly IPriceConversionAgent _priceConversionAgent;
+    private readonly QueryParameters _queryParameters;
     private readonly ILogger<CryptoController> _logger;
 
     #endregion
 
     #region ctor
 
-    public CryptoController(ICoinService coinService, ILogger<CryptoController> logger)
+    public CryptoController(IListingsAgent listingsAgent, IQuotesAgent quotesAgent, IPriceConversionAgent priceConversionAgent, ILogger<CryptoController> logger)
     {
-        _coinService = coinService ?? throw new ArgumentNullException(nameof(coinService));
+        _listingsAgent = listingsAgent ?? throw new ArgumentNullException(nameof(listingsAgent));
+        _quotesAgent = quotesAgent ?? throw new ArgumentNullException(nameof(quotesAgent));
+        _priceConversionAgent = priceConversionAgent ?? throw new ArgumentNullException(nameof(priceConversionAgent));
+        _queryParameters = new QueryParameters();
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -27,92 +33,85 @@ public class CryptoController : ControllerBase
     #region ControllerMethods
     
     /// <summary>
-    /// Gets All Supported Coins.
+    /// Gets All Coins.
     /// </summary>
-    /// <param name="currency">
-    /// Currency.
+    /// <param name="listingsQuery">
+    /// The Listings Query.
     /// </param>
     /// <returns>
     /// Returns a List of Coins.
     /// </returns>
-    [HttpGet("currency:{currency}")]
-    [ProducesResponseType(typeof(IReadOnlyList<CoinMarkets>), (int)HttpStatusCode.OK)]
-    public async Task<ActionResult<IReadOnlyList<CoinMarkets>>> Get(string currency)
+    [HttpGet("listings")]
+    [ProducesResponseType(typeof(IReadOnlyList<ListingsModel>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<IReadOnlyList<ListingsModel>>> GetListings([FromQuery] ListingsQuery listingsQuery)
     {
-        _logger.Log(LogLevel.Information, "Executing CoinMarkets Get");
+        _logger.Log(LogLevel.Information, "Executing Listings Get");
         
-        IReadOnlyList<CoinMarkets> coinMarkets = await _coinService.GetAllSupportedCoins(currency);
+        if (!string.IsNullOrWhiteSpace(listingsQuery.Convert) && !string.IsNullOrWhiteSpace(listingsQuery.ConvertId))
+        {
+            throw new AgentException("Properties 'convert' and 'convert_id' cannot be used together.", 400);
+        }
+
+        ResponseList<ListingsModel> response = await _listingsAgent.GetList<ListingsModel>(Constants.Cryptocurrency.Listing.Latest + $"?{_queryParameters.BindQueryParameters(listingsQuery)}");
+        IReadOnlyList<ListingsModel> coinMarkets = response.Data;
 
         return Ok(coinMarkets);
     }
     
     /// <summary>
-    /// Gets Coin By Id.
+    /// Gets Quotes.
     /// </summary>
-    /// <param name="id">
-    /// Coin's Id.
+    /// <param name="quotesQuery">
+    /// The Quotes Query.
     /// </param>
     /// <returns>
-    /// Returns a Coin data.
+    /// Returns a Coin Latest Data.
     /// </returns>
-    [HttpGet("id:{id}")]
-    [ProducesResponseType(typeof(CoinList), (int)HttpStatusCode.OK)]
-    public async Task<ActionResult<CoinList>> GetCoinById(string id)
+    [HttpGet("quote")]
+    [ProducesResponseType(typeof(List<QuotesModel>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<List<QuotesModel>>> GetQuotes([FromQuery] QuotesQuery quotesQuery)
     {
-        _logger.Log(LogLevel.Information, "Executing Coin Get By Id");
+        _logger.Log(LogLevel.Information, "Executing Quotes Get");
         
-        CoinList coin = await _coinService.GetCoinById(id);
+        if (string.IsNullOrWhiteSpace(quotesQuery.Id) && string.IsNullOrWhiteSpace(quotesQuery.Symbol) && string.IsNullOrWhiteSpace(quotesQuery.Slug))
+        {
+            throw new AgentException("'id', 'symbol' or 'slug' must be used.", 400);
+        }
+        if (!string.IsNullOrWhiteSpace(quotesQuery.Convert) && !string.IsNullOrWhiteSpace(quotesQuery.ConvertId))
+        {
+            throw new AgentException("Properties 'convert' and 'convert_id' cannot be used together.", 400);
+        }
 
-        return Ok(coin);
+        Response<QuotesModel> response = await _quotesAgent.GetDictionary<QuotesModel>(Constants.Cryptocurrency.Quotes.Latest + $"?{_queryParameters.BindQueryParameters(quotesQuery)}");
+        List<QuotesModel> quotes = response?.Data?.Values?.ToList();
+
+        return Ok(quotes);
     }
     
     /// <summary>
-    /// Gets Coin's History By Id.
+    /// Converts currency price.
     /// </summary>
-    /// <param name="id">
-    /// Coin's Id.
-    /// </param>
-    /// <param name="date">
-    /// The date of data snapshot, format: dd-mm-yyyy
+    /// <param name="priceQuery">
+    /// The Price Conversion Query.
     /// </param>
     /// <returns>
-    /// Returns a Coin's history.
+    /// Returns Converted values.
     /// </returns>
-    [HttpGet("{id}/{date}")]
-    [ProducesResponseType(typeof(CoinList), (int)HttpStatusCode.OK)]
-    public async Task<ActionResult<CoinList>> GetCoinHistoryById(string id, string date)
+    [HttpGet("price-conversion")]
+    [ProducesResponseType(typeof(PriceConversionModel), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<PriceConversionModel>> GetPriceConversion([FromQuery] PriceConversionQuery priceQuery)
     {
-        _logger.Log(LogLevel.Information, "Executing CoinHistory Get By Id and Date");
+        _logger.Log(LogLevel.Information, "Executing Price Conversion Get");
         
-        CoinList coin = await _coinService.GetCoinHistoryById(id, date);
+        if (!string.IsNullOrWhiteSpace(priceQuery.Convert) && !string.IsNullOrWhiteSpace(priceQuery.ConvertId))
+        {
+            throw new AgentException("Properties 'convert' and 'convert_id' cannot be used together.", 400);
+        }
 
-        return Ok(coin);
-    }
-    
-    /// <summary>
-    /// Gets Coin's History By Id.
-    /// </summary>
-    /// <param name="id">
-    /// Coin's Id.
-    /// </param>
-    /// <param name="currency">
-    /// Currency.
-    /// </param>
-    /// <param name="days">
-    /// Data up to number of days ago (eg. 1,14,30,max).
-    /// </param>
-    /// <returns>
-    /// Returns a MarketChart.
-    /// </returns>
-    [HttpGet("{id}/{date}/{days}")]
-    [ProducesResponseType(typeof(CoinList), (int)HttpStatusCode.OK)]
-    public async Task<ActionResult<CoinList>> GetMarketChartByCoinId(string id, string currency, string days)
-    {
-        _logger.Log(LogLevel.Information, "Executing MarketChart Get By Id");
-        
-        MarketChartById marketChart = await _coinService.GetMarketChartByCoinId(id, currency, days);
+        SingleResponse<PriceConversionModel> response = await _priceConversionAgent.GetSingle<PriceConversionModel>(Constants.Tools.PriceConversion.Url + $"?{_queryParameters.BindQueryParameters(priceQuery)}");
+        PriceConversionModel priceConversion = response?.Data;
 
-        return Ok(marketChart);
+        return Ok(priceConversion);
     }
     #endregion
 }
