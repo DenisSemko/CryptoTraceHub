@@ -37,7 +37,7 @@ public sealed class ListingsQuery
     public SortListingLatest Sort { get; set; } = SortListingLatest.MarketCap;
     [JsonProperty("sort_dir")]
     [JsonConverter(typeof(StringEnumConverter))]
-    public SortDirection SortDir { get; set; } = SortDirection.Ascending;
+    public SortDirection SortDir { get; set; } = SortDirection.Descending;
     [JsonProperty("cryptocurrency_type")]
     [JsonConverter(typeof(StringEnumConverter))]
     public CryptocurrencyType CryptocurrencyType { get; set; } = Enums.CryptocurrencyType.All;
