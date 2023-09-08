@@ -6,6 +6,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CryptoAgent", "CryptoAgent"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoAgent.CoinAPI", "Services\CryptoAgent\CryptoAgent.CoinAPI\CryptoAgent.CoinAPI.csproj", "{57026C76-7B84-491B-BB7F-1C55159F35E8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ConfigAgent", "ConfigAgent", "{D355C164-7D65-48C0-B4F7-A59CB3A72819}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigAgent.API", "Services\ConfigAgent\ConfigAgent.API\ConfigAgent.API.csproj", "{EA8E8D1F-7FFD-45EC-99AA-EBDC7E76E554}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingBlocks", "{448160CA-D844-4ABE-9E8C-BE6AFDD48D7A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBus.Messages", "BuildingBlocks\EventBus.Messages\EventBus.Messages.csproj", "{C06C1EA7-AC68-4A80-AFD3-2E03D2D249A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,11 +22,22 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{1539C112-634C-44FB-BC84-D319C1913E5C} = {647BCCB9-E5E5-4E46-ADB5-6F7991DB3DC3}
 		{57026C76-7B84-491B-BB7F-1C55159F35E8} = {1539C112-634C-44FB-BC84-D319C1913E5C}
+		{D355C164-7D65-48C0-B4F7-A59CB3A72819} = {647BCCB9-E5E5-4E46-ADB5-6F7991DB3DC3}
+		{EA8E8D1F-7FFD-45EC-99AA-EBDC7E76E554} = {D355C164-7D65-48C0-B4F7-A59CB3A72819}
+		{C06C1EA7-AC68-4A80-AFD3-2E03D2D249A8} = {448160CA-D844-4ABE-9E8C-BE6AFDD48D7A}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{57026C76-7B84-491B-BB7F-1C55159F35E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{57026C76-7B84-491B-BB7F-1C55159F35E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57026C76-7B84-491B-BB7F-1C55159F35E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57026C76-7B84-491B-BB7F-1C55159F35E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA8E8D1F-7FFD-45EC-99AA-EBDC7E76E554}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA8E8D1F-7FFD-45EC-99AA-EBDC7E76E554}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA8E8D1F-7FFD-45EC-99AA-EBDC7E76E554}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA8E8D1F-7FFD-45EC-99AA-EBDC7E76E554}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C06C1EA7-AC68-4A80-AFD3-2E03D2D249A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C06C1EA7-AC68-4A80-AFD3-2E03D2D249A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C06C1EA7-AC68-4A80-AFD3-2E03D2D249A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C06C1EA7-AC68-4A80-AFD3-2E03D2D249A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

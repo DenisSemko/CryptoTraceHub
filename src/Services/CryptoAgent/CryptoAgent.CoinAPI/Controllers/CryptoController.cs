@@ -1,3 +1,5 @@
+using Constants = CryptoAgent.CoinAPI.Common.Constants;
+
 namespace CryptoAgent.CoinAPI.Controllers;
 
 /// <summary>
@@ -82,7 +84,7 @@ public class CryptoController : ControllerBase
             throw new AgentException("Properties 'convert' and 'convert_id' cannot be used together.", 400);
         }
 
-        Response<QuotesModel> response = await _quotesAgent.GetDictionary<QuotesModel>(Constants.Cryptocurrency.Quotes.Latest + $"?{_queryParameters.BindQueryParameters(quotesQuery)}");
+        Models.Common.Response<QuotesModel> response = await _quotesAgent.GetDictionary<QuotesModel>(Constants.Cryptocurrency.Quotes.Latest + $"?{_queryParameters.BindQueryParameters(quotesQuery)}");
         List<QuotesModel> quotes = response?.Data?.Values?.ToList();
 
         return Ok(quotes);
