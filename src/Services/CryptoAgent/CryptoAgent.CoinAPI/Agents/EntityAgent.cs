@@ -49,48 +49,6 @@ public class EntityAgent<T> : IEntityAgent<T> where T : class
         return JsonConvert.DeserializeObject<SingleResponse<T>>(response);
     }
 
-    public async Task<TResponse> Post<TRequest, TResponse>(TRequest body, string uri)
-    {
-        HttpRequestMessage request = new HttpRequestMessage();
-        CredentialsTransferEvent credentials = await HandleCredentialsResponse();
-        
-        request.Headers.Add(Constants.Cryptocurrency.ApiKeyHeader,credentials.ApiKey);
-        request.RequestUri = new Uri($"{credentials.BaseUrl}/{uri}");
-        request.Content = new StringContent(JsonConvert.SerializeObject(body), System.Text.Encoding.UTF8,
-            @"application/json");
-
-        string response = await _httpManager.Post(request);
-        return JsonConvert.DeserializeObject<TResponse>(response);
-    }
-
-    public async Task<TResponse> Update<TRequest, TResponse>(TRequest body, string uri)
-    {
-        HttpRequestMessage request = new HttpRequestMessage();
-        CredentialsTransferEvent credentials = await HandleCredentialsResponse();
-        
-        request.Headers.Add(Constants.Cryptocurrency.ApiKeyHeader,credentials.ApiKey);
-        request.RequestUri = new Uri($"{credentials.BaseUrl}/{uri}");
-        request.Content = new StringContent(JsonConvert.SerializeObject(body), System.Text.Encoding.UTF8,
-            @"application/json");
-
-        string response = await _httpManager.Put(request);
-        return JsonConvert.DeserializeObject<TResponse>(response);
-    }
-
-    public async Task<TResponse> Delete<TRequest, TResponse>(TRequest body, string uri)
-    {
-        HttpRequestMessage request = new HttpRequestMessage();
-        CredentialsTransferEvent credentials = await HandleCredentialsResponse();
-        
-        request.Headers.Add(Constants.Cryptocurrency.ApiKeyHeader,credentials.ApiKey);
-        request.RequestUri = new Uri($"{credentials.BaseUrl}/{uri}");
-        request.Content = new StringContent(JsonConvert.SerializeObject(body), System.Text.Encoding.UTF8,
-            @"application/json");
-
-        string response = await _httpManager.Delete(request);
-        return JsonConvert.DeserializeObject<TResponse>(response);
-    }
-
     private async Task<CredentialsTransferEvent> HandleCredentialsResponse()
     {
         MassTransit.Response<CredentialsTransferEvent> credentialsResponse = await _requestClient.GetResponse<CredentialsTransferEvent>(new CheckCredentialsEvent() { CoinApiType = CoinApiType.CoinMarketCap});
