@@ -1,4 +1,5 @@
-<img src="https://github.com/DenisSemko/CryptoTraceHub/assets/53062219/bc995bf3-b609-4e11-9c8f-6edadb659805" alt="logo" title="logo" align="right" height="100" />
+<img src="https://github.com/DenisSemko/CryptoTraceHub/assets/53062219/5744b16a-6c1a-4d84-a37b-9713dfda7b5c" alt="logo" title="logo" align="right" height="100" />
+
 
 # CryptoTraceHub
 > Go-to solution for staying up-to-date with the dynamic world of cryptocurrencies. With its intuitive design and powerful features, CryptoTraceHub simplifies the way you monitor cryptocurrencies prices.
@@ -30,9 +31,7 @@ Simplify your crypto journey with CryptoTraceHub today!
 - Unit Testing: xUnit
 
 ## Architecture
-
-![image](https://github.com/DenisSemko/CryptoTraceHub/assets/53062219/50f38d05-4eb5-45b4-bf4b-21b947c2da37)
-
+<img width="828" alt="Screenshot 2023-10-10 at 21 17 01" src="https://github.com/DenisSemko/CryptoTraceHub/assets/53062219/fd9ea179-3e15-40f7-8a89-ae3b04e8ffed">
 
 ## Features
 - Get Listings with additional query parameters;
@@ -41,7 +40,8 @@ Simplify your crypto journey with CryptoTraceHub today!
 
 ## Screenshots
 <p><i>Back-end</i></p>
-<img width="1425" alt="Screenshot 2023-10-29 at 18 24 28" src="https://github.com/DenisSemko/CryptoTraceHub/assets/53062219/f94f33d0-244c-43db-ad13-dfba6ecfde77">
+<img width="1454" alt="Screenshot 2023-10-29 at 18 35 19" src="https://github.com/DenisSemko/CryptoTraceHub/assets/53062219/7589e138-7f5e-47b8-83e4-e93402ebdd03">
+
 
 ## Setup
 Project is built locally and it uses SSL certificate to run the Web App securely.
