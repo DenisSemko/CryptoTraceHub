@@ -1,0 +1,61 @@
+﻿version: '3.8'
+
+services:
+  cryptoconfigdb:
+    container_name: cryptoconfigdb
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin1234
+      - POSTGRES_DB=CryptoConfigDb
+    restart: always
+    ports:
+      - "5433:5432"
+    volumes:
+      - configdb_data:/var/lib/postgresql/data
+  
+  pgadmin:
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.admin
+      - PGADMIN_DEFAULT_PASSWORD=admin1234
+    restart: always
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/root/.pgadmin
+
+  rabbitmq:
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  
+  seq:
+    image: datalust/seq:latest
+    container_name: seq
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "5341:5341"
+      - "8081:80"
+
+  cryptoagent.coinapi:
+    container_name: cryptoagent.coinapi
+    environment:
+      - "ConnectionStrings:DefaultConnection=Server=localhost;Port=5433;Database=CryptoConfigDb;User Id=postgres;Password=postgres;"
+      - "EventBusSettings:HostAddress=amqp://guest:guest@localhost:5672"
+    depends_on:
+      - cryptoconfigdb
+      - rabbitmq
+    ports:
+      - "9001:80"
+
+  configagent.api:
+    container_name: configagent.api
+    environment:
+      - "EventBusSettings:HostAddress=amqp://guest:guest@localhost:5672"
+    depends_on:
+      - rabbitmq
+    ports:
+      - "9002:80"

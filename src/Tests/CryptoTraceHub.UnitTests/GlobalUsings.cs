@@ -1,1 +1,14 @@
+global using AutoMapper;
+global using ConfigAgent.API.Controllers;
+global using ConfigAgent.API.Entities;
+global using ConfigAgent.API.Exceptions;
+global using ConfigAgent.API.Mapper;
+global using ConfigAgent.API.Models;
+global using ConfigAgent.API.Repositories.Abstract;
+global using ConfigAgent.API.Services.Abstract;
+global using ConfigAgent.API.Services;
+global using CryptoTraceHub.UnitTests.ConfigAgent.Common;
+global using EventBus.Messages.Common;
+global using Moq;
+global using Shouldly;
 global using Xunit;

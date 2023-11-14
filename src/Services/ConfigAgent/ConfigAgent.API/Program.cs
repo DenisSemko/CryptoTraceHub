@@ -3,13 +3,16 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddAgentServices(builder.Configuration);
 
+builder.Host.UseSerilog((context, loggerConfig) =>
+    loggerConfig.ReadFrom.Configuration(context.Configuration));
+
 builder.Services.AddMassTransit(configuration => {
     configuration.AddConsumer<CheckCredentialsConsumer>();
     
     configuration.UsingRabbitMq((context, configurator) => {
         configurator.Host(builder.Configuration["EventBusSettings:HostAddress"]);
         
-        configurator.ReceiveEndpoint(Constants.CredentialsTransferQueue, c => {
+        configurator.ReceiveEndpoint(EventBus.Messages.Common.Constants.CredentialsTransferQueue, c => {
             c.ConfigureConsumer<CheckCredentialsConsumer>(context);
         });
     });
@@ -36,6 +39,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+app.UseSerilogRequestLogging();
 
 app.MapControllers();
 

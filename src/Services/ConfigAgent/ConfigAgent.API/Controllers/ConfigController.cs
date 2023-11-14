@@ -1,3 +1,5 @@
+using Constants = ConfigAgent.API.Common.Constants;
+
 namespace ConfigAgent.API.Controllers;
 
 /// <summary>
@@ -10,16 +12,14 @@ public class ConfigController : ControllerBase
     #region PrivateFields
     
     private readonly ICredentialsService _credentialsService;
-    private readonly ILogger<ConfigController> _logger;
     
     #endregion
     
     #region ctor
 
-    public ConfigController(ICredentialsService credentialsService, ILogger<ConfigController> logger)
+    public ConfigController(ICredentialsService credentialsService)
     {
         _credentialsService = credentialsService ?? throw new ArgumentNullException(nameof(credentialsService));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
     
     #endregion
@@ -36,8 +36,6 @@ public class ConfigController : ControllerBase
     [ProducesResponseType(typeof(CredentialsModel), (int)HttpStatusCode.OK)]
     public async Task<ActionResult<CredentialsModel>> Get()
     {
-        _logger.Log(LogLevel.Information, "Executing Credentials Get");
-
         CredentialsModel credentials = await _credentialsService.Get();
 
         return Ok(credentials);
@@ -56,13 +54,11 @@ public class ConfigController : ControllerBase
     [ProducesResponseType(typeof(CredentialsModel), (int)HttpStatusCode.Created)]
     public async Task<IActionResult> Post([FromBody] CredentialsModel credentialsModel)
     {
-        _logger.Log(LogLevel.Information, "Executing Credentials Post");
-
         CredentialsModel existedCredentials = await _credentialsService.Get();
 
         if (existedCredentials is not null)
         {
-            throw new AgentException("Your credentials are already in the database, use them.", 403);
+            throw new AgentException(Constants.Credentials.ExistedCredentialsException, 403);
         }
 
         await _credentialsService.InsertOne(credentialsModel);
@@ -85,8 +81,6 @@ public class ConfigController : ControllerBase
     [ProducesDefaultResponseType]
     public async Task<ActionResult> Put([FromBody] CredentialsModel credentialsModel)
     {
-        _logger.Log(LogLevel.Information, "Executing Credentials Put");
-        
         await _credentialsService.Update(credentialsModel);
         
         return NoContent();
@@ -107,8 +101,6 @@ public class ConfigController : ControllerBase
     [ProducesDefaultResponseType]
     public async Task<ActionResult> Delete(Guid id)
     {
-        _logger.Log(LogLevel.Information, "Executing Credentials Delete");
-        
         await _credentialsService.Delete(id);
         
         return NoContent();
