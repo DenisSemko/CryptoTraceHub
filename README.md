@@ -29,6 +29,7 @@ Simplify your crypto journey with CryptoTraceHub today!
 - Microservices
 - Microservices Communication - RabbitMQ via MassTransit
 - Unit Testing: xUnit
+- Logging: Serilog, Seq
 
 ## Architecture
 <img width="828" alt="Screenshot 2023-10-10 at 21 17 01" src="https://github.com/DenisSemko/CryptoTraceHub/assets/53062219/fd9ea179-3e15-40f7-8a89-ae3b04e8ffed">
