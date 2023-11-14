@@ -19,6 +19,7 @@ global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.Extensions.Options;
 global using Newtonsoft.Json.Converters;
 global using Newtonsoft.Json;
+global using Serilog;
 global using System.Net;
 global using System.Reflection;
 global using System.Runtime.Serialization;

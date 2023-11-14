@@ -23,6 +23,8 @@ public sealed class ExceptionHandlingMiddleware : IMiddleware
 
         ContextResponse response = new (exception.Message, exception.GetType().FullName, exception.StackTrace);
 
+        Log.Error(exception, "Exception occured: {Message}", exception.Message);
+        
         await httpContext.Response.WriteAsync(JsonSerializer.Serialize(response));
     }
     

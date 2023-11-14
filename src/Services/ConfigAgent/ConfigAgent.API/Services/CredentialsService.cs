@@ -1,3 +1,5 @@
+using Constants = ConfigAgent.API.Common.Constants;
+
 namespace ConfigAgent.API.Services;
 
 public class CredentialsService : ICredentialsService
@@ -16,6 +18,12 @@ public class CredentialsService : ICredentialsService
     public async Task<CredentialsModel> Get()
     {
         IReadOnlyList<Credentials> databaseCredentials = await _unitOfWork.Credentials.GetAllAsync();
+
+        if (!databaseCredentials.Any())
+        {
+            throw new KeyNotFoundException(Constants.Credentials.NotFoundException);
+        }
+        
         return _mapper.Map<CredentialsModel>(databaseCredentials.FirstOrDefault());
     }
 
@@ -36,6 +44,11 @@ public class CredentialsService : ICredentialsService
     public async Task Update(CredentialsModel entity)
     {
         Credentials existedCredentials = await _unitOfWork.Credentials.GetByCoinApiType(entity.CoinApiType);
+
+        if (existedCredentials is null)
+        {
+            throw new KeyNotFoundException(Constants.Credentials.NotFoundException);
+        }
         
         Credentials credentialsToUpdate = _mapper.Map(entity, existedCredentials);
         
@@ -49,6 +62,10 @@ public class CredentialsService : ICredentialsService
         if (existedCredentials is not null)
         {
             await _unitOfWork.Credentials.DeleteAsync(id);
+        }
+        else
+        {
+            throw new KeyNotFoundException(Constants.Credentials.NotFoundException);
         }
     }
 }
